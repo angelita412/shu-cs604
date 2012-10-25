@@ -33,6 +33,9 @@
             android:name=".JournalActivity"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" >
         </activity>
+           <activity android:name="RegisterActivity" android:theme="@android:style/Theme.Holo.Light.NoActionBar" >
+               
+           </activity>
     </application>
 
 </manifest>

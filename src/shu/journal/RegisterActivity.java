@@ -9,7 +9,7 @@ public class RegisterActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.ac);
+        setContentView(R.layout.register_user);
     }
 
     @Override
