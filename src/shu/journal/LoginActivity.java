@@ -23,6 +23,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private EditText editUsername;
 	private EditText editPassword;
 
+	DBAdapter dbAdapter;
+
+	int loginAttempts = 0;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -38,37 +42,40 @@ public class LoginActivity extends Activity implements OnClickListener {
 		loginButton.setOnClickListener(loginClickListener);
 		registerButton.setOnClickListener(this);
 		forgotPasswordButton.setOnClickListener(this);
+
+		dbAdapter = new DBAdapter(getApplicationContext());
+		dbAdapter.open();
 	}
 
 	OnClickListener loginClickListener = new OnClickListener() {	
 		public void onClick(View v) {
 			String username = editUsername.getText().toString();
 			String password = editPassword.getText().toString();
-			int attempts = 0;
+			long user_id;
 
-			if(attempts == 3) //lock account out after 3 attempts
-			{
+			if(!dbAdapter.getLockStatus(username)){
+				user_id = dbAdapter.checkPassword(username, password); 
 
-			}
-
-			if(username.length() >= 5 && username.length() <= 10 &&
-					password.length() >= 6 && password.length() <= 15){
-				//check if valid from database
-				//showDialog(0);
-				//check if locked
-				//showDialog(1);
-				//else
-				//show journalActivity
-
-				Intent i = new Intent(getApplicationContext(), JournalActivity.class);
-				startActivity(i);
-			}else{
-				if(attempts == 3){
-					showDialog(1);
-				}else{
-					showDialog(0);
-					attempts++;
+				if(user_id != -1){
+					dbAdapter.close();
+					Intent i = new Intent(getApplicationContext(), ListPagesActivity.class);
+					i.putExtra(dbAdapter.KEY_USERID, user_id);
+					startActivity(i);
 				}
+				else
+				{
+					loginAttempts++;
+
+					if(loginAttempts >= 3){
+						dbAdapter.lockAccount(username);
+						showDialog(1);
+					}
+					else
+						showDialog(0);
+				}
+
+			}else{
+				showDialog(1);
 			}
 		}
 	};
