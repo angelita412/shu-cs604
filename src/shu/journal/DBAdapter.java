@@ -23,17 +23,18 @@ public class DBAdapter {
     private static final String DATABASE_NAME = "journal";
     private static final String USERS_TABLE = "users";
     private static final String JOURNAL_TABLE = "journal_entries";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     private static final String USERS_CREATE =
-        "create table users (_id integer primary key autoincrement, "
-        + "username text not null, location text not null, " 
-        + "f_name text not null, l_name text not null, "
-        + "s_question text not null, password text not null, " 
-        + "date text not null, j_entry text not null); " ;
+        "create table users (_id integer primary key autoincrement, " +
+        "username text not null, " +
+        "f_name text not null, " +
+        "l_name text not null, " +
+        "s_question text not null, " +
+        "password text not null); " ;
     private static final String JOURNAL_CREATE =
-    	"create table journal_entries (_id integer primary key autoincrement, "
-        + "date text not null, j_entry text not null";
+    	"create table journal_entries (_id integer primary key autoincrement, " +
+    	"username text not null, date text not null, j_entry text not null);";
         
     private final Context context;
     
@@ -56,6 +57,8 @@ public class DBAdapter {
         @Override
         public void onCreate(SQLiteDatabase db) 
         {
+        	//db.execSQL("DROP TABLE journal_entries");
+        	//db.execSQL("DROP TABLE users");
             db.execSQL(USERS_CREATE);
             db.execSQL(JOURNAL_CREATE);
         }
@@ -85,8 +88,7 @@ public class DBAdapter {
     }
     
     //---insert a user into the users table---
-    public long insertUser(String username, String f_name,
-    		String l_name,String s_question,String password) 
+    public long insertUser(String username, String f_name,String l_name,String s_question,String password) 
     {
         ContentValues initialValues = new ContentValues();
         initialValues.put(KEY_USERNAME, username);
@@ -97,7 +99,16 @@ public class DBAdapter {
         return db.insert(USERS_TABLE, null, initialValues);
     }
     
-    //--check if username and password match--
+    //---updates user password---
+	public boolean updatePassword(long rowId, String password) 
+	{
+	    ContentValues args = new ContentValues();
+	    args.put(KEY_PASSWORD, password);
+	    return db.update(USERS_TABLE, args, 
+	                     KEY_ROWID + "=" + rowId, null) > 0;
+	}
+
+	//--check if username and password match--
     public boolean checkPassword (String username ,String password) throws SQLException 
     {
         Cursor mCursor =
@@ -112,6 +123,22 @@ public class DBAdapter {
             mCursor.moveToFirst();
         }
         return KEY_PASSWORD.matches(password);
+    }
+    
+    //--check if security answer matches--
+    public boolean checkSecAnswer (String s_answer, String username) throws SQLException 
+    {
+        Cursor mCursor =
+                db.query(true,USERS_TABLE, new String[]{KEY_SQUESTION},
+                		KEY_USERNAME + "=" + username,
+                		null, 
+                		null, 
+                		null, 
+                		null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return KEY_SQUESTION.matches(s_answer);
     }
     
     //--insert a journal entry--
@@ -132,21 +159,65 @@ public class DBAdapter {
     
 
     //---retrieves all the titles---
-    public Cursor getAllPages(String table) 
+    public Cursor getAllPages() 
     {
-        return db.query(true, table, new String[] {
+    	 Cursor mCursor = db.query(true, JOURNAL_TABLE, new String[] {
         		KEY_ROWID,
+        		KEY_USERNAME,
         		KEY_DATE,
-        		KEY_JENTRY,},null,null,null, 
+        		KEY_JENTRY,},KEY_USERNAME + " LIKE'username%'",null,null, 
                 null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
     }
- //---retrieves a particular title---
+ //---retrieves a particular journal entry---
     public Cursor getJournalPage(long rowId) throws SQLException 
+    {
+        Cursor mCursor =
+                db.query(true, JOURNAL_TABLE, new String[] {
+                		KEY_ROWID,
+                		KEY_DATE},
+                		KEY_ROWID + "=" + rowId,
+                		null, 
+                		null, 
+                		null, 
+                		null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+  //---retrieves a particular user entry---
+    public Cursor getUserById(long rowId) throws SQLException 
     {
         Cursor mCursor =
                 db.query(true, USERS_TABLE, new String[] {
                 		KEY_ROWID,
-                		KEY_DATE},
+                		KEY_USERNAME,
+                		KEY_FNAME,
+                		KEY_LNAME,
+                		KEY_SQUESTION,
+                		KEY_PASSWORD},
+                		KEY_ROWID + "=" + rowId,
+                		null, 
+                		null, 
+                		null, 
+                		null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+  //--retrieves a particular journal page---
+    public Cursor getPageById(long rowId) throws SQLException 
+    {
+        Cursor mCursor =
+                db.query(true, JOURNAL_TABLE, new String[] {
+                		KEY_ROWID,
+                		KEY_DATE,
+                		KEY_JENTRY},
                 		KEY_ROWID + "=" + rowId,
                 		null, 
                 		null, 
@@ -165,5 +236,45 @@ public class DBAdapter {
         args.put(KEY_JENTRY, j_entry);
         return db.update(JOURNAL_TABLE, args, 
                          KEY_ROWID + "=" + rowId, null) > 0;
+    }
+  //--- get first record ---
+    public Cursor getFirstJournalEntry()
+    {
+    	Cursor mCursor =
+            db.query(true, JOURNAL_TABLE, new String[] {
+            		KEY_ROWID,
+            		KEY_USERNAME,
+            		KEY_DATE,
+            		KEY_JENTRY},
+            		null,
+            		null, 
+            		null, 
+            		null, 
+            		null, "1");
+    if (mCursor != null) {
+        mCursor.moveToFirst();
+    }
+    return mCursor;
+    }
+  //--- get first user ---
+    public Cursor getFirstUser()
+    {
+    	Cursor mCursor =
+            db.query(true, USERS_TABLE, new String[] {
+            		KEY_ROWID,
+            		KEY_USERNAME,
+            		KEY_FNAME,
+            		KEY_LNAME,
+            		KEY_SQUESTION,
+            		KEY_PASSWORD},
+            		null,
+            		null, 
+            		null, 
+            		null, 
+            		null, "1");
+    if (mCursor != null) {
+        mCursor.moveToFirst();
+    }
+    return mCursor;
     }
 }
