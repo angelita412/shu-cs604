@@ -72,9 +72,9 @@ public abstract class TestDatabase{
 		cursor = databaseTest.getFirstUser();
 		boolean accountLocked;
 		accountLocked=databaseTest.getLockStatus(cursor.getString(1));
-		if(accountLocked = true)
+		if(accountLocked == true)
 			System.out.println("Lock check successful, account is locked");
-		else if(accountLocked = false)
+		else if(accountLocked == false)
 			System.out.println("Lock check successful, account is unlocked");
 		else
 			System.out.println("Lock check unsuccessful");
