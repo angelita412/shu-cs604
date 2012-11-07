@@ -38,7 +38,7 @@ public class DBAdapter {
 
     private static final String USERS_CREATE =
 			"create table users (_id integer primary key autoincrement, "
-					+ "username text not null, password text not null, account_locked integer not null" 
+					+ "username text not null, password text not null, account_locked integer not null," 
 					+ "location text not null, " 
 					+ "f_name text not null, l_name text not null, "
 					+ "s_question1 text not null, " 
@@ -129,6 +129,7 @@ public class DBAdapter {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(KEY_USERNAME, username);
 		initialValues.put(KEY_PASSWORD, password);
+		initialValues.put(KEY_ACCOUNTLOCKED, 0);
 		initialValues.put(KEY_LOCATION,location);
 		initialValues.put(KEY_FNAME, f_name);
 		initialValues.put(KEY_LNAME, l_name);
