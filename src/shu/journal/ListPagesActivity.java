@@ -1,8 +1,10 @@
 package shu.journal;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -16,7 +18,8 @@ import android.widget.SimpleCursorAdapter;
 
 public class ListPagesActivity extends ListActivity implements OnClickListener{
 	StringBuilder sb = new StringBuilder("");
-	DBAdapter db = new DBAdapter(this);
+	DBAdapter dbAdapter = new DBAdapter(this);
+	Long user_id;
 	
 	private static final int DELETE_ID = Menu.FIRST + 1;
 	private static final int EDIT_ID = Menu.FIRST;
@@ -25,40 +28,14 @@ public class ListPagesActivity extends ListActivity implements OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_pages);
-        db.open();
-        db.insertPage("username", "00/00/0000", "entry1");
-        db.insertPage("username", "10/00/0000", "entry1");
-        db.insertPage("username", "02/00/0000", "entry1");
-        db.insertPage("username", "03/00/0000", "entry1");
+        dbAdapter.open();
+        Bundle extras = getIntent().getExtras();
+        user_id = extras.getLong(dbAdapter.KEY_USERID);
+        Log.e("user_id fill",""+user_id); 
         fillData();
-                
         //getListView returns the current instance of local list view
         registerForContextMenu(getListView());       
     }  
-	@Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-            ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        //menu.add(0, DELETE_ID, 0, "Delete");
-        //menu.add(0, EDIT_ID, 0, "Edit");
-    }
-  	
-  	public boolean onContextItemSelected(MenuItem item) {
-  		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-  	    /*switch(item.getItemId()) {
-  	    case DELETE_ID:
-  	        db.deletePage(info.id);
-  	        fillData();
-  	        return true;
-  	    case EDIT_ID:
-  	    	Intent i = new Intent(this, NewEvent.class);
-  	    	NewEvent.action = NewEvent.EDIT_EVENT;
-  	    	NewEvent.cursor = db.getTitle(info.id);
-  	    	startActivity(i);
-  	        return true;
-  	    }*/
-  	    return super.onContextItemSelected(item);
-  	}
   	
   	//Will show selected item from the listview
   	protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -69,13 +46,16 @@ public class ListPagesActivity extends ListActivity implements OnClickListener{
     }
   	 //Fills the listview with data from the DB
 	  private void fillData() {
-		Cursor c = db.getAllPages();
+		Log.e("user_id fillf",""+user_id); 
+		Cursor c = dbAdapter.getAllUserPages(user_id);
+		Log.e("user_id cursor",""+user_id); 
       startManagingCursor(c);
+      	
 
      @SuppressWarnings("static-access")
-		String[] from = new String[] {db.KEY_DATE,db.KEY_USERNAME};
+		String[] from = new String[] {dbAdapter.KEY_DATE};
      
-     int[] to = new int[] { R.id.show_date, R.id.show_username,};
+     int[] to = new int[] { R.id.show_date};
       
       //Now create an array adapter and set it to display using our row
 	SimpleCursorAdapter events =
@@ -88,7 +68,7 @@ public class ListPagesActivity extends ListActivity implements OnClickListener{
   public boolean onCreateOptionsMenu(Menu menu){
   	super.onCreateOptionsMenu(menu);
   	MenuInflater inflater = getMenuInflater();
-  	inflater.inflate(R.menu.activity_main, menu);
+  	inflater.inflate(R.menu.activity_pages, menu);
   	return true;
   }
 	
@@ -96,14 +76,11 @@ public class ListPagesActivity extends ListActivity implements OnClickListener{
   @Override
   public boolean onOptionsItemSelected(MenuItem item){
   	switch(item.getItemId()){
-  	/*case R.id.settings:
-  		startActivity(new Intent(this, Settings.class));
+  	case R.id.add_page:
+  		Intent i = new Intent(getApplicationContext(), JournalEntryActivity.class);
+		//i.putExtra(dbAdapter.KEY_USERID, user_id);
+		startActivity(i);
   		return true;
-  	case R.id.add_event_menu:
-  		Intent i = new Intent(this, NewEvent.class);
-  		NewEvent.action = NewEvent.ADD_EVENT;
-  		startActivity(i);
-  		return true;*/
   	}
   	return false;
   }

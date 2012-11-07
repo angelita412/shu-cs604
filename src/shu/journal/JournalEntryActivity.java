@@ -1,6 +1,6 @@
 package shu.journal;
 
-import java.sql.Date;
+import java.util.Date;
 import java.text.SimpleDateFormat;
 
 import android.app.Activity;
@@ -16,11 +16,11 @@ import android.widget.TextView;
 
 public class JournalEntryActivity extends Activity implements OnClickListener {
 	
-	String current_date;
 	TextView dateLabel;
 	Button addEntryButton;
 	Button cancelEntryButton;
 	EditText journalPage;
+	Long user_id;
 	
 	DBAdapter db = new DBAdapter(this);
 	
@@ -28,7 +28,7 @@ public class JournalEntryActivity extends Activity implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_page);
-        getTimeDate();
+        
         
         dateLabel = (TextView)findViewById(R.id.pageDate);
         journalPage = (EditText)findViewById(R.id.journalPage);
@@ -36,29 +36,26 @@ public class JournalEntryActivity extends Activity implements OnClickListener {
         cancelEntryButton = (Button)findViewById(R.id.cancelPage);
 
         addEntryButton.setOnClickListener(this);
-        cancelEntryButton.setOnClickListener(this);
-        
-       
+        cancelEntryButton.setOnClickListener(this);     
+        getTimeDate();
     }
     
     public void getTimeDate() {
-    	Time today = new Time(Time.getCurrentTimezone());
-    	today.setToNow();
-    	current_date = today.monthDay+"/"+today.month+"/"+today.year;
-    	dateLabel.setText("Today is " + current_date);
+    	Date date = new Date();
+    	String strDate = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
+    	dateLabel.setText("Today is " + strDate);
 	}
+    
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.addPage:
             	db.open();
-            	db.insertPage("username", current_date,""+journalPage.getText());
+            	db.insertPage(user_id,""+journalPage.getText());
             	db.close();
-            	
             break;
             case R.id.cancelPage:
-            	journalPage.setText("");
-            	Intent i = new Intent(this, ListPagesActivity.class);
-            	startActivity(i);
+            	db.open();
+            	finish();
         }
     }
 
