@@ -139,6 +139,7 @@ public class DBAdapter {
 		initialValues.put(KEY_SANSWER1, s_answer1);
 		initialValues.put(KEY_SANSWER2, s_answer2);
 		initialValues.put(KEY_SANSWER3, s_answer3);
+		initialValues.put(KEY_DATE, "Test Date");
 
 		return db.insert(USERS_TABLE, null, initialValues);
 	}
