@@ -76,8 +76,6 @@ public abstract class TestDatabase{
 			System.out.println("Lock check successful, account is locked");
 		else if(accountLocked == false)
 			System.out.println("Lock check successful, account is unlocked");
-		else
-			System.out.println("Lock check unsuccessful");
 	}
 	void testAddPage(){
 		System.out.println("Testing adding a journal page");
