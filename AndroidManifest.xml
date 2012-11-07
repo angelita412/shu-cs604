@@ -41,6 +41,10 @@
              android:name="ListPagesActivity" 
              android:theme="@android:style/Theme.Holo.Light.NoActionBar" >
            </activity>
+           <activity 
+             android:name="JournalEntryUpdateActivity" 
+             android:theme="@android:style/Theme.Holo.Light.NoActionBar" >
+           </activity>
     </application>
 
 </manifest>

@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.view.Menu;
 import android.view.View;
@@ -22,13 +23,15 @@ public class JournalEntryActivity extends Activity implements OnClickListener {
 	EditText journalPage;
 	Long user_id;
 	
-	DBAdapter db = new DBAdapter(this);
+	DBAdapter dbAdapter = new DBAdapter(this);
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_page);
-        
+        dbAdapter.open();
+        Bundle extras = getIntent().getExtras();
+        user_id = extras.getLong(dbAdapter.KEY_USERID);
         
         dateLabel = (TextView)findViewById(R.id.pageDate);
         journalPage = (EditText)findViewById(R.id.journalPage);
@@ -41,20 +44,23 @@ public class JournalEntryActivity extends Activity implements OnClickListener {
     }
     
     public void getTimeDate() {
-    	Date date = new Date();
-    	String strDate = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
-    	dateLabel.setText("Today is " + strDate);
+    	SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+    	String currentDate = sdf.format(new Date());
+    	dateLabel.setText("Today is " + currentDate);
 	}
     
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.addPage:
-            	db.open();
-            	db.insertPage(user_id,""+journalPage.getText());
-            	db.close();
+            	dbAdapter.open();
+            	dbAdapter.insertPage(user_id,""+journalPage.getText());
+            	dbAdapter.close();
+            	Intent i = new Intent(getApplicationContext(), ListPagesActivity.class);
+				i.putExtra(dbAdapter.KEY_USERID, user_id);
+				startActivity(i);
+            	finish();
             break;
             case R.id.cancelPage:
-            	db.open();
             	finish();
         }
     }

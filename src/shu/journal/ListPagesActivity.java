@@ -4,64 +4,66 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 public class ListPagesActivity extends ListActivity implements OnClickListener{
 	StringBuilder sb = new StringBuilder("");
 	DBAdapter dbAdapter = new DBAdapter(this);
 	Long user_id;
+	TextView username;
+	static SimpleCursorAdapter pages;
 	
-	private static final int DELETE_ID = Menu.FIRST + 1;
-	private static final int EDIT_ID = Menu.FIRST;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_pages);
         dbAdapter.open();
+        
         Bundle extras = getIntent().getExtras();
         user_id = extras.getLong(dbAdapter.KEY_USERID);
-        Log.e("user_id fill",""+user_id); 
+        
+        username = (TextView)findViewById(R.id.show_username);
+		
         fillData();
         //getListView returns the current instance of local list view
         registerForContextMenu(getListView());       
     }  
+	public void onResume(){
+		super.onResume();
+		pages.notifyDataSetChanged();
+	}
   	
   	//Will show selected item from the listview
   	protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        //Intent i = new Intent(this, DisplayEvent.class);
-	    	//DisplayEvent.cursor = db.getPageById(id);
-	    	//startActivity(i);
+        Intent i = new Intent(this, JournalEntryUpdateActivity.class);
+        i.putExtra(dbAdapter.KEY_USERID, user_id);
+	    JournalEntryUpdateActivity.cursor = dbAdapter.getPageById(id);
+	    startActivity(i);
     }
   	 //Fills the listview with data from the DB
-	  private void fillData() {
-		Log.e("user_id fillf",""+user_id); 
+	  @SuppressWarnings("deprecation")
+	private void fillData() {
 		Cursor c = dbAdapter.getAllUserPages(user_id);
-		Log.e("user_id cursor",""+user_id); 
-      startManagingCursor(c);
-      	
+		startManagingCursor(c);
+		
 
      @SuppressWarnings("static-access")
 		String[] from = new String[] {dbAdapter.KEY_DATE};
-     
-     int[] to = new int[] { R.id.show_date};
+     	int[] to = new int[] { R.id.show_date};
       
       //Now create an array adapter and set it to display using our row
-	SimpleCursorAdapter events =
-      new SimpleCursorAdapter(this, R.layout.list_row, c, from, to,0);
-      setListAdapter(events);
-  }
+     	pages =	new SimpleCursorAdapter(this, R.layout.list_row, c, from, to,0);
+     	setListAdapter(pages);
+	  }
 	  
 	//Options menu
 	@Override
@@ -78,7 +80,7 @@ public class ListPagesActivity extends ListActivity implements OnClickListener{
   	switch(item.getItemId()){
   	case R.id.add_page:
   		Intent i = new Intent(getApplicationContext(), JournalEntryActivity.class);
-		//i.putExtra(dbAdapter.KEY_USERID, user_id);
+		i.putExtra(dbAdapter.KEY_USERID, user_id);
 		startActivity(i);
   		return true;
   	}
