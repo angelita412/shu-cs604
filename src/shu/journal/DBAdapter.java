@@ -158,15 +158,15 @@ public class DBAdapter {
 		Cursor mCursor =
 				db.query(true, USERS_TABLE, new String[] {
 						KEY_ROWID},
-						KEY_USERNAME + "=" + username + " AND " + KEY_PASSWORD + "=" + password,
+						KEY_USERNAME + "='" + username + "' AND " + KEY_PASSWORD + "='" + password+"'",
 						null, 
 						null, 
 						null, 
 						null, null);
 		
-		if (mCursor != null && mCursor.getCount() == 1) {
+		if (mCursor != null && mCursor.getCount() == 2) {
 			mCursor.moveToFirst();
-			return mCursor.getLong(mCursor.getColumnIndex(KEY_ROWID));
+			return mCursor.getLong(0);
 		}
 		else
 			return -1;
@@ -177,7 +177,7 @@ public class DBAdapter {
 		ContentValues args = new ContentValues();
         args.put(KEY_ACCOUNTLOCKED, 1);
         return db.update(USERS_TABLE, args, 
-                         KEY_USERNAME + "=" + username, null) > 0;
+                         KEY_USERNAME + "='" + username+"'", null) > 0;
 	}
 	
 	public boolean unlockAccount(String username)
@@ -185,7 +185,7 @@ public class DBAdapter {
 		ContentValues args = new ContentValues();
         args.put(KEY_ACCOUNTLOCKED, 0);
         return db.update(USERS_TABLE, args, 
-                         KEY_USERNAME + "=" + username, null) > 0;
+                         KEY_USERNAME + "='" + username+"'", null) > 0;
 	}
 	
 	public Cursor getSecQuestions(String username)
@@ -195,7 +195,7 @@ public class DBAdapter {
 						KEY_SQUESTION1,
 						KEY_SQUESTION2,
 						KEY_SQUESTION3},
-						KEY_USERNAME + "=" + username,
+						KEY_USERNAME + "='" + username+"'",
 						null, 
 						null, 
 						null, 
@@ -211,7 +211,7 @@ public class DBAdapter {
 				db.query(true, USERS_TABLE, new String[] {
 						KEY_ROWID,
 						KEY_ACCOUNTLOCKED},
-						KEY_USERNAME + "=" + username,
+						KEY_USERNAME + "='" + username+"'",
 						null, 
 						null, 
 						null, 
@@ -276,7 +276,6 @@ public class DBAdapter {
     {
     	 Cursor mCursor = db.query(true, JOURNAL_TABLE, new String[] {
         		KEY_ROWID,
-        		KEY_USERNAME,
         		KEY_DATE,
         		KEY_JENTRY,},KEY_USERID + " = " + user_id,null,null, 
                 null, null, null);
@@ -362,7 +361,6 @@ public class DBAdapter {
     	Cursor mCursor =
             db.query(true, JOURNAL_TABLE, new String[] {
             		KEY_ROWID,
-            		KEY_USERNAME,
             		KEY_DATE,
             		KEY_JENTRY},
             		null,
