@@ -1,7 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Journal</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">Journal</string>
-    <string name="regirstration_title">Fill out the information to create a new user account</string>
+    <string name="registration_title">Fill out the information to create a new user account</string>
+    <string name="unlockTitle">Unlock User Account</string>
+    <string name="resetTitle">Reset User Account</string>
+    <string name="updateTitle">Update User Account</string>
+    <string-array name="securityQuestions">
+        <item >Security Question 1</item>
+        <item >Security Question 2</item>
+        <item >Security Question 3</item>
+        <item >Security Question 4</item>
+        <item >Security Question 5</item>
+    </string-array>
 </resources>

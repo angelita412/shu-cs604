@@ -8,6 +8,9 @@
 package shu.journal;
 
 public final class R {
+    public static final class array {
+        public static final int securityQuestions=0x7f060000;
+    }
     public static final class attr {
     }
     public static final class color {
@@ -18,24 +21,38 @@ public final class R {
         public static final int ic_launcher=0x7f020001;
     }
     public static final class id {
-        public static final int addPage=0x7f080002;
-        public static final int btnForgotPassword=0x7f08000b;
-        public static final int btnLogin=0x7f080009;
-        public static final int btnRegister=0x7f08000a;
-        public static final int cancelPage=0x7f080003;
-        public static final int editPassword=0x7f080008;
-        public static final int editUsername=0x7f080007;
-        public static final int firt_name=0x7f08000c;
-        public static final int journalPage=0x7f080001;
-        public static final int last_name=0x7f08000d;
-        public static final int menu_settings=0x7f080011;
-        public static final int pageDate=0x7f080000;
-        public static final int password=0x7f08000f;
-        public static final int security_question_spinner=0x7f080010;
-        public static final int show_date=0x7f080004;
-        public static final int show_username=0x7f080005;
-        public static final int tvTitle=0x7f080006;
-        public static final int username=0x7f08000e;
+        public static final int addPage=0x7f090002;
+        public static final int add_page=0x7f09001f;
+        public static final int answerOne=0x7f090011;
+        public static final int answerThree=0x7f090013;
+        public static final int answerTwo=0x7f090012;
+        public static final int btnForgotPassword=0x7f09000b;
+        public static final int btnLogin=0x7f090009;
+        public static final int btnRegister=0x7f09000a;
+        public static final int cancelPage=0x7f090003;
+        public static final int confirm_password=0x7f09001c;
+        public static final int deletePage=0x7f09001b;
+        public static final int editPassword=0x7f090008;
+        public static final int editUsername=0x7f090007;
+        public static final int first_name=0x7f09000c;
+        public static final int journalPage=0x7f090001;
+        public static final int last_name=0x7f09000d;
+        public static final int menu_settings=0x7f09001e;
+        public static final int pageDate=0x7f090000;
+        public static final int password=0x7f09000f;
+        public static final int registerUserButton=0x7f090014;
+        public static final int resetAccountButton=0x7f090016;
+        public static final int resetFieldsButton=0x7f090015;
+        public static final int security_question_spinner=0x7f090010;
+        public static final int show_date=0x7f090004;
+        public static final int show_username=0x7f090005;
+        public static final int tvTitle=0x7f090006;
+        public static final int unlockUserButton=0x7f090017;
+        public static final int updateJournalPage=0x7f090019;
+        public static final int updatePage=0x7f09001a;
+        public static final int updatePageDate=0x7f090018;
+        public static final int updatePasswordButton=0x7f09001d;
+        public static final int username=0x7f09000e;
     }
     public static final class layout {
         public static final int add_page=0x7f030000;
@@ -43,18 +60,26 @@ public final class R {
         public static final int list_row=0x7f030002;
         public static final int login_activity=0x7f030003;
         public static final int register_user=0x7f030004;
+        public static final int reset_user_password=0x7f030005;
+        public static final int unlock_account=0x7f030006;
+        public static final int update_page=0x7f030007;
+        public static final int update_password=0x7f030008;
     }
     public static final class menu {
-        public static final int activity_main=0x7f070000;
+        public static final int activity_main=0x7f080000;
+        public static final int activity_pages=0x7f080001;
     }
     public static final class string {
         public static final int app_name=0x7f050000;
         public static final int hello_world=0x7f050001;
         public static final int menu_settings=0x7f050002;
-        public static final int regirstration_title=0x7f050004;
+        public static final int registration_title=0x7f050004;
+        public static final int resetTitle=0x7f050006;
         public static final int title_activity_main=0x7f050003;
+        public static final int unlockTitle=0x7f050005;
+        public static final int updateTitle=0x7f050007;
     }
     public static final class style {
-        public static final int AppTheme=0x7f060000;
+        public static final int AppTheme=0x7f070000;
     }
 }

@@ -188,11 +188,29 @@ public class DBAdapter {
                          KEY_USERNAME + "=" + username, null) > 0;
 	}
 	
+	public Cursor getSecQuestions(String username)
+	{
+		Cursor mCursor =
+				db.query(true, USERS_TABLE, new String[] {
+						KEY_SQUESTION1,
+						KEY_SQUESTION2,
+						KEY_SQUESTION3},
+						KEY_USERNAME + "=" + username,
+						null, 
+						null, 
+						null, 
+						null, null);
+		
+		
+		return mCursor;
+	}
+	
 	public boolean getLockStatus(String username)
 	{
 		Cursor mCursor =
 				db.query(true, USERS_TABLE, new String[] {
-						KEY_ROWID},
+						KEY_ROWID,
+						KEY_ACCOUNTLOCKED},
 						KEY_USERNAME + "=" + username,
 						null, 
 						null, 
