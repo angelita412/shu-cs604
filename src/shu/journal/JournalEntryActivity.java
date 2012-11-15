@@ -55,9 +55,6 @@ public class JournalEntryActivity extends Activity implements OnClickListener {
             	dbAdapter.open();
             	dbAdapter.insertPage(user_id,""+journalPage.getText());
             	dbAdapter.close();
-            	Intent i = new Intent(getApplicationContext(), ListPagesActivity.class);
-				i.putExtra(dbAdapter.KEY_USERID, user_id);
-				startActivity(i);
             	finish();
             break;
             case R.id.cancelPage:

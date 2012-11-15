@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -46,16 +47,21 @@ public class LoginActivity extends Activity implements OnClickListener {
 		dbAdapter = new DBAdapter(getApplicationContext());
 		dbAdapter.open();
 	}
+	public void onResume(){
+		super.onResume();
+		dbAdapter.open();
+	}
 
 	OnClickListener loginClickListener = new OnClickListener() {	
 		public void onClick(View v) {
 			String username = editUsername.getText().toString();
 			String password = editPassword.getText().toString();
 			long user_id;
+			
 
 			if(!dbAdapter.getLockStatus(username)){
 				user_id = dbAdapter.checkPassword(username, password); 
-
+				Log.e("user_id",""+user_id);
 				if(user_id != -1){
 					dbAdapter.close();
 					Intent i = new Intent(getApplicationContext(), ListPagesActivity.class);

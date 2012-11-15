@@ -2,7 +2,9 @@ package shu.journal;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -35,6 +37,8 @@ public class RegisterActivity extends Activity implements OnClickListener {
         
         registerUserButton = (Button) findViewById(R.id.registerUserButton);
         resetFieldsButton = (Button) findViewById(R.id.resetFieldsButton);
+        registerUserButton.setOnClickListener(this);
+        resetFieldsButton.setOnClickListener(this);
         
         editFirstName = (EditText) findViewById(R.id.first_name);
         editSurname = (EditText) findViewById(R.id.last_name);
@@ -46,23 +50,16 @@ public class RegisterActivity extends Activity implements OnClickListener {
         editAnswerThree = (EditText) findViewById(R.id.answerThree);
         
         
-        securityQuestions = (Spinner) findViewById(R.id.security_question_spinner);
+        /*securityQuestions = (Spinner) findViewById(R.id.security_question_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.id.security_question_spinner, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        securityQuestions.setAdapter(adapter);
+        securityQuestions.setAdapter(adapter);*/
         
         dbAdapter = new DBAdapter(getApplicationContext());
         dbAdapter.open();
     }
     
-    //What's this listener do?
-    OnClickListener submitListener = new OnClickListener() {
-    	public void onClick(View v)
-    	{
-    		//getDataForFields();
-    	}
-    };
-    
+  
     private void getDataForFields()
     {
     	String firstName = editFirstName.getText().toString();
@@ -74,29 +71,32 @@ public class RegisterActivity extends Activity implements OnClickListener {
 		String answerTwo = editAnswerTwo.getText().toString(); 
 		String answerThree = editAnswerThree.getText().toString();
 		
-		String questionOne = securityQuestions.getItemAtPosition(0).toString();
-		String questionTwo = securityQuestions.getItemAtPosition(1).toString();
-		String questionThree = securityQuestions.getItemAtPosition(2).toString();
+		//String questionOne = securityQuestions.getItemAtPosition(0).toString();
+		//String questionTwo = securityQuestions.getItemAtPosition(1).toString();
+		//String questionThree = securityQuestions.getItemAtPosition(2).toString();
 		
-		dbAdapter.insertUser(username, password, null, firstName, surname, questionOne, questionTwo, questionThree, answerOne, answerTwo, answerThree);
+		dbAdapter.insertUser(username, password, "location", firstName, surname, "questionOne", "questionTwo", "questionThree", answerOne, answerTwo, answerThree);
+		Log.e("User added succesfully","Successs!!");
+		Cursor c = dbAdapter.getFirstUser();
+		Log.e("get user",""+c.getString(1));
+		finish();
     }
     
     public void onClick(View v)
     {    	
-    	switch(v.getId())
-    	{
+    	switch(v.getId()){
     	case R.id.registerUserButton:
     		getDataForFields();
     		break;
     	case R.id.resetFieldsButton:
-    		editFirstName.setText("");
-    		editFirstName.setText("");
-    		editSurname.setText("");
-    		editUsername.setText("");
-    		editPassword.setText("");
-    		editAnswerOne.setText("");
-    		editAnswerTwo.setText("");
-    		editAnswerThree.setText("");
+    		Log.e("assigning text values","test");
+    		editFirstName.setText("luis");
+    		editSurname.setText("Gonzalez");
+    		editUsername.setText("user");
+    		editPassword.setText("test");
+    		editAnswerOne.setText("test");
+    		editAnswerTwo.setText("test");
+    		editAnswerThree.setText("test");
     		break;
     	}
     }
