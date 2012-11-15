@@ -83,6 +83,8 @@ public class ListPagesActivity extends ListActivity implements OnClickListener{
 		i.putExtra(dbAdapter.KEY_USERID, user_id);
 		startActivity(i);
   		return true;
+  	case R.id.log_out:
+  		finish();
   	}
   	return false;
   }

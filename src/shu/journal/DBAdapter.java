@@ -164,7 +164,7 @@ public class DBAdapter {
 						null, 
 						null, null);
 		
-		if (mCursor != null && mCursor.getCount() == 2) {
+		if (mCursor != null && mCursor.getCount() == 1) {
 			mCursor.moveToFirst();
 			return mCursor.getLong(0);
 		}
