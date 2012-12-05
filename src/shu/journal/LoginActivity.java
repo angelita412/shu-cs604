@@ -25,6 +25,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private EditText editPassword;
 
 	DBAdapter dbAdapter;
+	TestDatabase testDatabase = new TestDatabase();
 
 	int loginAttempts = 0;
 
@@ -46,6 +47,11 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 		dbAdapter = new DBAdapter(getApplicationContext());
 		dbAdapter.open();
+		testDatabase.testAddUser(dbAdapter);
+		testDatabase.testPasswordCheck(dbAdapter);
+		testDatabase.testAccountLockCheck(dbAdapter);
+		testDatabase.testAddPage(dbAdapter);
+		testDatabase.testDeleteUser(dbAdapter);
 	}
 	public void onResume(){
 		super.onResume();

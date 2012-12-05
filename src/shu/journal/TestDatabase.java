@@ -2,8 +2,7 @@ package shu.journal;
 
 import android.database.Cursor;
 
-public abstract class TestDatabase{
-	DBAdapter databaseTest = new DBAdapter(null);
+public class TestDatabase{
 	private String[][] userData = new String[0][10];
 	Cursor cursor;
 	private Long user_id;
@@ -31,79 +30,70 @@ public abstract class TestDatabase{
 		userData[1][9]="Answer2";
 		userData[1][10]="Answer3";
 	}
-	void testAddUser() {
+	void testAddUser(DBAdapter databaseTest) {
 		System.out.println("Testing adding user to the database");
 		databaseTest.insertUser("tUser", "tPassword", "tlocation", "first", "last", "q1", "q2", "q3", "a1", "a2", "a3");
-		cursor = databaseTest.getFirstUser();
-		int n;
-		for (n=0;n>10;n++){
-			if(userData[0][n]==cursor.getString((int)n+1)){
-				System.out.println(userData[1][n]+"=Found");
-			}
-			else
-				System.out.println(userData[1][n]+"=Not Found");
-		}
-		
+		boolean user_exists = databaseTest.checkUserExists("tUser");
+		System.out.println("====User tUser exists --> " + user_exists);		
 	}
-	void testUserExists(){
-		System.out.println("Testing user exists check");
-		cursor = databaseTest.getFirstUser();
-		if(databaseTest.checkUserExists(cursor.getString(1))==true)
-			System.out.println("User exists");
-		else if(databaseTest.checkUserExists(cursor.getString(1))==false)
-			System.out.println("User does not exist");
-		else
-			System.out.println("Cant verify if user exists, check function");
-		
-	}
-	void testPasswordCheck(){
-		System.out.println("Testing password check");
-		cursor = databaseTest.getFirstUser();
+	void testPasswordCheck(DBAdapter databaseTest){
+		System.out.println("Testing successful password check");
 		Long passwordReturn;
-		passwordReturn = databaseTest.checkPassword(cursor.getString(1), "tPassword");
+		passwordReturn = databaseTest.checkPassword("tUser", "tPassword");
 		if(passwordReturn == -1)
-			System.out.println("Password check failed");
+			System.out.println("====Password check failed");
 		else
-			System.out.println("Password check successful");
+			System.out.println("====Password check successful");
+		System.out.println("Testing un-successful password check");
+		passwordReturn = databaseTest.checkPassword("tUser", "tPasswords");
+		if(passwordReturn == -1)
+			System.out.println("====Password check failed");
+		else
+			System.out.println("====Password check successful");
 	}
-	void testAccountLockCheck()
+	void testAccountLockCheck(DBAdapter databaseTest)
 	{
 		System.out.println("Testing account lock check");
 		cursor = databaseTest.getFirstUser();
 		boolean accountLocked;
-		accountLocked=databaseTest.getLockStatus(cursor.getString(1));
+		accountLocked=databaseTest.getLockStatus("tUser");
 		if(accountLocked == true)
-			System.out.println("Lock check successful, account is locked");
+			System.out.println("====Lock check successful, account is locked");
 		else if(accountLocked == false)
-			System.out.println("Lock check successful, account is unlocked");
+			System.out.println("====Lock check successful, account is unlocked");
 	}
-	void testAddPage(){
+	void testAddPage(DBAdapter databaseTest){
 		System.out.println("Testing adding a journal page");
-		cursor = databaseTest.getFirstUser();
-		databaseTest.insertPage(cursor.getLong(1), "Journal Entry");
-		System.out.println("Page added successfully");
+		cursor = databaseTest.getUserByUsername("tUser");
+		databaseTest.insertPage(cursor.getLong(0), "Journal Entry");
+		System.out.println("====Page added successfully");
 	}
-	void testGetPage()
+	void testGetPage(DBAdapter databaseTest)
 	{
 		System.out.println("Testing retrieving a journal page");
-		cursor = databaseTest.getFirstUser();
-		Cursor c = databaseTest.getPageById(cursor.getLong(1));
+		cursor = databaseTest.getUserByUsername("tUser");
+		Cursor c = databaseTest.getPageById(cursor.getLong(0));
 		if (c.getString(3)=="Journal Entry")
 			System.out.println("Page retrieved successfuly -- "+c.getString(3));
 		else
 			System.out.println("Could not retrieve page -- "+c.getString(3));
 	}
-	void testModifyPage(){
+	void testModifyPage(DBAdapter databaseTest){
 		System.out.println("Testing modifying");
-		cursor = databaseTest.getFirstUser();
-		Cursor c = databaseTest.getPageById(cursor.getLong(1));
-		databaseTest.updatePage(c.getLong(0), "Modify Entry");
+		cursor = databaseTest.getUserByUsername("tUser");
+		databaseTest.updatePage(cursor.getLong(1), "Modify Entry");
 		System.out.println("Page successfully modified");
 	}
-	void testDeletePage(){
+	void testDeletePage(DBAdapter databaseTest){
 		System.out.println("Testing deleting a journal page");
-		cursor = databaseTest.getFirstUser();
-		Cursor c = databaseTest.getPageById(cursor.getLong(1));
-		databaseTest.deletePage(c.getPosition());
+		cursor = databaseTest.getUserByUsername("tUser");
+		databaseTest.deletePage(cursor.getPosition());
+		System.out.println("Page successfully deleted");
+	}
+	void testDeleteUser(DBAdapter databaseTest){
+		System.out.println("Testing deleting a user");
+		cursor = databaseTest.getUserByUsername("tUser");
+		databaseTest.deleteUser("tUser");
+		System.out.println("====User successfully deleted");
 	}
 }
