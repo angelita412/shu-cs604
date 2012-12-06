@@ -33,19 +33,19 @@ public class TestDatabase{
 	void testAddUser(DBAdapter databaseTest) {
 		System.out.println("Testing adding user to the database");
 		databaseTest.insertUser("tUser", "tPassword", "tlocation", "first", "last", "q1", "q2", "q3", "a1", "a2", "a3");
-		boolean user_exists = databaseTest.checkUserExists("tUser");
+		boolean user_exists = databaseTest.checkUserExists("user");
 		System.out.println("====User tUser exists --> " + user_exists);		
 	}
 	void testPasswordCheck(DBAdapter databaseTest){
 		System.out.println("Testing successful password check");
 		Long passwordReturn;
-		passwordReturn = databaseTest.checkPassword("tUser", "tPassword");
+		passwordReturn = databaseTest.checkPassword("user", "pass");
 		if(passwordReturn == -1)
 			System.out.println("====Password check failed");
 		else
 			System.out.println("====Password check successful");
 		System.out.println("Testing un-successful password check");
-		passwordReturn = databaseTest.checkPassword("tUser", "tPasswords");
+		passwordReturn = databaseTest.checkPassword("user", "pass");
 		if(passwordReturn == -1)
 			System.out.println("====Password check failed");
 		else
@@ -56,7 +56,7 @@ public class TestDatabase{
 		System.out.println("Testing account lock check");
 		cursor = databaseTest.getFirstUser();
 		boolean accountLocked;
-		accountLocked=databaseTest.getLockStatus("tUser");
+		accountLocked=databaseTest.getLockStatus("user");
 		if(accountLocked == true)
 			System.out.println("====Lock check successful, account is locked");
 		else if(accountLocked == false)
@@ -64,7 +64,7 @@ public class TestDatabase{
 	}
 	void testAddPage(DBAdapter databaseTest){
 		System.out.println("Testing adding a journal page");
-		cursor = databaseTest.getUserByUsername("tUser");
+		cursor = databaseTest.getUserByUsername("user");
 		databaseTest.insertPage(cursor.getLong(0), "Journal Entry");
 		System.out.println("====Page added successfully");
 	}

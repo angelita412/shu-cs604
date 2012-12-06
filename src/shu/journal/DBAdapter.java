@@ -108,7 +108,7 @@ public class DBAdapter {
     	Cursor mCursor =
 				db.query(true, USERS_TABLE, new String[] {
 						KEY_ROWID},
-						KEY_USERNAME + "=" + username,
+						KEY_USERNAME + "='" + username+"'",
 						null, 
 						null, 
 						null, 
@@ -269,6 +269,10 @@ public class DBAdapter {
     {
         return db.delete(JOURNAL_TABLE, KEY_ROWID + "=" + rowId, null) > 0;
     }
+    public boolean deleteUser(String username) 
+    {
+        return db.delete(USERS_TABLE, KEY_ROWID + "='" + username+"'", null) > 0;
+    }
     
 
     //---retrieves all the titles---
@@ -399,5 +403,31 @@ public class DBAdapter {
         mCursor.moveToFirst();
     }
     return mCursor;
+    }
+    public Cursor getUserByUsername(String username) throws SQLException 
+    {
+        Cursor mCursor =
+                db.query(true, USERS_TABLE, new String[] {
+                		KEY_ROWID,
+                		KEY_USERNAME,
+                		KEY_PASSWORD,
+                		KEY_FNAME,
+                		KEY_LNAME,
+                		KEY_LOCATION,
+                		KEY_SQUESTION1,
+                		KEY_SQUESTION2,
+                		KEY_SQUESTION3,
+                		KEY_SANSWER1,
+                		KEY_SANSWER2,
+                		KEY_SANSWER3},
+                		KEY_USERNAME + "='" + username +"'",
+                		null, 
+                		null, 
+                		null, 
+                		null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
     }
 }

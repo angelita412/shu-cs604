@@ -17,7 +17,7 @@
 		    android:maxLines="1"/>
 		<TextView 
 		    android:id="@+id/show_username"
-		    android:text="usernames"
+		    android:text="username goes here"
 		    android:layout_width="200dip" 
 		    android:layout_height="wrap_content"/>
 	</LinearLayout>
